@@ -37,7 +37,7 @@ def decode_access_token(token: str):
         )
 
 def get_access_token(request: Request):
-    access_token = request.cookies.get("access_token")
+    access_token = request.cookies.get("token")
     if not access_token:
         raise HTTPException(
             status_code = 404,

@@ -2,36 +2,43 @@ import React, { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import api from '../api';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { Mail, Lock } from 'lucide-react'; // Iconos opcionales si usas lucide-react
+import { Mail, Lock } from 'lucide-react';
+import useAuth from '../features/auth/hooks/useAuth';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+    const { login, error } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
 
-  const handleGoogleLoginSuccess = async (credentialResponse) => {
-
+    const handleGoogleLoginSuccess = async (credentialResponse) => {
         const id_token = credentialResponse.credential;
 
         try {
             const response = await api.post('/auth/google', {
                 id_token,
             });
+
             const { user, token } = response.data;
+
             console.log('User:', user);
             console.log('Token:', token);
-            login({ ...user, token });
+
+            // ✅ LLAMADA CORRECTA AL LOGIN
+            await login({ token, user });
+
             navigate('/');
         } catch (error) {
             console.error('Login Error:', error);
+            setErrorMsg('Falló el inicio de sesión con Google.');
         }
-     
-    }
+    };
+
+
+    
   const handleGoogleLoginError = () => {
     setErrorMsg('Falló el inicio de sesión con Google.');
   };

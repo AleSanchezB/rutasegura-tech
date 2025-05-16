@@ -28,6 +28,7 @@ async def login_router(form_data: LoginForm, db: Session = Depends(get_db)):
 
 @auth_router.post("/google/", response_model=LoginResponse)
 async def google_login_router(google_data: GoogleLoginRequest, db: Session = Depends(get_db)):
+    print("Google Login Payload:", google_data)
     return authenticate_google_user(google_data.id_token, db)
 
 @auth_router.post("/verify-token/", response_model=CheckAuthResponse)
@@ -36,8 +37,9 @@ async def verify_token_router(token_request: TokenRequest, db: Session = Depends
     Verifica el token JWT personalizado del sistema y devuelve datos del usuario.
     """
     user = get_current_user(token_request.token, db)
+    print("User from token:", user)
     user_info = {
-        "user_id": user.user_id,
+        "user_id": user.id,
     }
     return {"user_info": user_info}
 

@@ -1,13 +1,14 @@
 import React from 'react';
-import clsx from 'clsx'; // Asegúrate de tener clsx instalado: npm install clsx
+import clsx from 'clsx';
+import { XIcon } from '@heroicons/react/outline';
 
 const Sidebar = ({ isOpen, onClose }) => {
   return (
     <>
-      {/* Fondo oscuro detrás del sidebar en móvil */}
+      {/* Fondo oscuro para móvil */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-30 z-30 lg:hidden"
+          className="fixed inset-0 bg-black bg-opacity-30 z-30"
           onClick={onClose}
         ></div>
       )}
@@ -18,11 +19,22 @@ const Sidebar = ({ isOpen, onClose }) => {
           {
             "-translate-x-full": !isOpen,
             "translate-x-0": isOpen,
-            "lg:static lg:translate-x-0": true, // en pantallas grandes siempre visible
           }
         )}
       >
+        {/* Botón para cerrar en todas las resoluciones */}
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-red-600 focus:outline-none"
+            aria-label="Cerrar menú"
+          >
+            <XIcon className="h-6 w-6" />
+          </button>
+        </div>
+
         <div className="text-2xl font-bold text-indigo-600 mb-6">RutaSegura</div>
+
         <nav className="flex flex-col space-y-3 text-gray-700">
           <a href="/" className="hover:text-indigo-600">Inicio</a>
           <a href="/proyectos" className="hover:text-indigo-600">Proyectos</a>

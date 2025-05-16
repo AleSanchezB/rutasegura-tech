@@ -6,7 +6,7 @@ from google.auth.transport import requests as google_requests
 from core.dependencies import get_db
 from core.settings import Settings
 from core.auth import create_access_token, decode_access_token
-from utils.security import verify_password
+from utils.security import verify_password, get_user_role
 from models.user import User
 from schemas.auth import LoginForm, TokenResponse, TokenRequest
 from schemas.user import LoginResponse,UserOut
@@ -73,7 +73,39 @@ def get_current_user(token: str, db: Session) -> User:
 
     return user
 
-def refresh_token(token_request: TokenRequest, db: Session) -> TokenResponse:
-    user = get_current_user(token_request.token, db)
-    new_token = create_access_token({"sub": str(user.id)})
-    return TokenResponse(access_token=new_token)
+def refresh_token(token_request: TokenRequest, db: Session = Depends(get_db)):
+    """
+    Renueva el token JWT basado en el token actual.
+    """
+    payload = decode_access_token(token_request.token)
+
+    if not payload or payload.get("sub") is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid token")
+    
+    user_id: str = payload.get("sub")
+    user_repo = UserRepo(db)
+    user = user_repo.get_by_id(user_id)
+
+    if user is None:
+        raise HTTPException(
+            status_code=401, 
+            detail="User not found")
+    
+    new_token = create_access_token(data={
+        "sub": user.user_id,
+    })
+    return TokenResponse(access_token=new_token, token_type="bearer")
+
+def autorize_user(user: User, role: str):
+    """
+    Verifica si el usuario tiene el rol necesario para acceder a un recurso.
+    """
+    user_role = get_user_role(user)
+    if user_role != role:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="User does not have enough privileges",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
