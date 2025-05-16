@@ -37,9 +37,9 @@ const Sidebar = ({ isOpen, onClose }) => {
 
         <nav className="flex flex-col space-y-3 text-gray-700">
           <a href="/" className="hover:text-indigo-600">Inicio</a>
-          <a href="/proyectos" className="hover:text-indigo-600">Proyectos</a>
-          <a href="/perfil" className="hover:text-indigo-600">Perfil</a>
-          <a href="/configuracion" className="hover:text-indigo-600">Configuración</a>
+          <a href="/routes" className="hover:text-indigo-600">Rutas</a>
+          <a href="/profile" className="hover:text-indigo-600">Perfil</a>
+          <a href="/logout" className="hover:text-indigo-600">Log Out</a>
         </nav>
       </aside>
     </>

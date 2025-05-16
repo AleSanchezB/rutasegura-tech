@@ -17,10 +17,10 @@ export default function useAuth() {
       console.log("Login credentials:", credentials)
     // Caso: login con Google ya autenticado
     if (credentials.token && credentials.user) {
-      try {
+        try {
+            print("Google login credentials:", credentials);
         setToken(credentials.token);
         setAuthenticated(true);
-        // Opcional: puedes guardar el usuario en un contexto si lo usas
         navigate(ROUTES.HOME);
         return true;
       } catch (err) {
@@ -33,7 +33,7 @@ export default function useAuth() {
     // Caso: login con email/password tradicional
     try {
       const response = await loginRequest(credentials);
-      setToken(response.data.access_token);
+      setToken(response.data.token);
       setAuthenticated(true);
       navigate(ROUTES.HOME);
       return true;
