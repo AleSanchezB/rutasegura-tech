@@ -11,19 +11,23 @@ from models.user import User
 from schemas.auth import LoginForm, TokenResponse, TokenRequest
 from schemas.user import LoginResponse,UserOut
 from db.crud import get_or_create_user
+from repos.user import UserRepo
 
 settings = Settings()
 
 def authenticate_user(form_data: LoginForm, db: Session) -> TokenResponse:
-    user = db.query(User).filter(User.email == form_data.email).first()
-    if not user or not verify_password(form_data.password, user.hashed_password):
+    user_repo = UserRepo(db)
+    user = user_repo.get_by_email(form_data.email)
+
+    if not user or not verify_password(form_data.password, user.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Email o contraseña incorrectos",
         )
 
     token = create_access_token({"sub": str(user.id)})
-    return TokenResponse(access_token=token)
+    print("Token:", token)
+    return TokenResponse(access_token=token, token_type="bearer")
 
 def authenticate_google_user(id_token_str: str, db: Session) -> LoginResponse:
     try:

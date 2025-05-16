@@ -3,6 +3,7 @@ import MapWithRoute from '../components/MapWithRoute';
 import Sidebar from '../components/Sidebar';
 import { MenuIcon } from '@heroicons/react/outline';
 import { useUser } from '../contexts/AuthContext';
+import rutas from '../data/rutas.jsx';
 
 const AdminCliente = () => {
   const { user } = useUser();
@@ -37,15 +38,12 @@ const AdminCliente = () => {
   };
 
   const handleSearchHistoricalRoutes = () => {
-    const simulatedRoutes = [
-      { route: 'Ruta 1', unit: 'Unidad A', date: '2025-05-10', stopTimes: ['08:00 AM', '08:30 AM', '09:00 AM'] },
-      { route: 'Ruta 2', unit: 'Unidad B', date: '2025-05-12', stopTimes: ['09:00 AM', '09:30 AM', '10:00 AM'] },
-    ];
+    const simulatedRoutes = rutas;
 
     const filteredRoutes = simulatedRoutes.filter(route => {
-      const matchDate = searchDate ? route.date === searchDate : true;
+      const matchDate = searchDate ? route.fecha === searchDate : true;
       const matchUnit = searchUnit ? route.unit.includes(searchUnit) : true;
-      const matchRoute = searchRoute ? route.route.includes(searchRoute) : true;
+      const matchRoute = searchRoute ? route.ruta.includes(searchRoute) : true;
       return matchDate && matchUnit && matchRoute;
     });
 
@@ -59,25 +57,7 @@ const AdminCliente = () => {
   };
 
   const handleSearchTransportRecords = () => {
-    const simulatedRecords = [
-      {
-        unit: 'Unidad A',
-        date: '2025-05-10',
-        stops: [
-          { stop: 'Parada 1', time: '08:00 AM', gpsData: true },
-          { stop: 'Parada 2', time: '08:30 AM', gpsData: true },
-          { stop: 'Parada 3', time: '09:00 AM', gpsData: false },
-        ],
-      },
-      {
-        unit: 'Unidad B',
-        date: '2025-05-12',
-        stops: [
-          { stop: 'Parada 1', time: '09:00 AM', gpsData: true },
-          { stop: 'Parada 2', time: '09:30 AM', gpsData: true },
-        ],
-      },
-    ];
+    const simulatedRecords = rutas;
 
     const filtered = simulatedRecords.filter(record => {
       const matchDate = searchTransportDate ? record.date === searchTransportDate : true;
@@ -87,7 +67,7 @@ const AdminCliente = () => {
 
     if (filtered.length > 0) {
       filtered.forEach(record => {
-        record.stops.sort((a, b) => {
+        record.paradas.sort((a, b) => {
           const timeA = new Date(`1970-01-01T${a.time}`);
           const timeB = new Date(`1970-01-01T${b.time}`);
           return timeA - timeB;
@@ -117,7 +97,8 @@ const AdminCliente = () => {
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="bg-white shadow flex items-center justify-between px-6 py-4">
-          <div className="ml-auto flex items-center space-x-3">
+            <h1 className="text-xl font-bold text-gray-800">Panel del Administrador de cliente</h1>
+            <div className="ml-auto flex items-center space-x-3">
             <span className="text-gray-800 font-medium">{user?.first_name} {user?.last_name}</span>
             <img
               src="https://previews.123rf.com/images/illustratiostock/illustratiostock2112/illustratiostock211200635/179843524-avatar-aislado-de-una-raza-de-perro-bulldog-ilustraci%C3%B3n-vectorial.jpg"
@@ -160,11 +141,12 @@ const AdminCliente = () => {
               {errorMessage && <p className="text-red-500">{errorMessage}</p>}
               {historicalRoutes.map((route, idx) => (
                 <div key={idx} className="mb-4">
-                  <h4 className="text-lg font-semibold">{route.route} - {route.unit} ({route.date})</h4>
+                  <h4 className="text-lg font-semibold">{route.route} - {route.unit} ({route.fecha})</h4>
                   <ul className="list-disc pl-5">
-                    {route.stopTimes.map((time, i) => (
-                      <li key={i}>Parada {i + 1}: {time}</li>
+                    {route.paradas.map((parada, i) => (
+                        <li key={i}>Parada {i + 1}: {parada.hora}</li>
                     ))}
+
                   </ul>
                 </div>
               ))}
@@ -184,9 +166,9 @@ const AdminCliente = () => {
                 <div key={idx} className="mb-4">
                   <h4 className="text-lg font-semibold">{record.unit} - {record.date}</h4>
                   <ul className="list-disc pl-5">
-                    {record.stops.map((stop, i) => (
+                    {record.paradas.map((paradas, i) => (
                       <li key={i}>
-                        {stop.stop}: {stop.time}
+                        {paradas.nombre}: {paradas.hora}
                         {!stop.gpsData && <span className="text-red-500"> (Datos incompletos)</span>}
                       </li>
                     ))}

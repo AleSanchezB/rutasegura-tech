@@ -36,7 +36,15 @@ async def verify_token_router(token_request: TokenRequest, db: Session = Depends
     """
     Verifica el token JWT personalizado del sistema y devuelve datos del usuario.
     """
+    print("Token Payload:", token_request)
     user = get_current_user(token_request.token, db)
+    print("User from token:", user)
+    if not user:
+        raise HTTPException(
+            status_code=401,
+            detail="Token inválido o usuario no encontrado",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     print("User from token:", user)
     user_info = {
         "user_id": user.id,

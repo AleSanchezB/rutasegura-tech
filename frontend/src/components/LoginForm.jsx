@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
-import api from '../api';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock } from 'lucide-react';
 import useAuth from '../features/auth/hooks/useAuth';
+import { isValidEmail } from '../utils/validations';
+import api from '../api';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const Login = () => {
 
             console.log('User:', user);
             console.log('Token:', token);
-
+            
             // ✅ LLAMADA CORRECTA AL LOGIN
             await login({ token, user });
 
@@ -43,20 +44,20 @@ const Login = () => {
     setErrorMsg('Falló el inicio de sesión con Google.');
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    api.post('/auth/login', { email, password })
-        .then(response => {
-            const { user, token } = response.data;
-            login({ ...user, token });  // Guardamos el usuario y el token
-            navigate('/');
-        })
-        .catch(error => {
-            console.error('Login Error:', error);
-            setErrorMsg('Credenciales incorrectas.');
-        });
-
+      const cleanedEmail = email.trim();
+      console.log(cleanedEmail);
+      if (!isValidEmail(cleanedEmail)) {
+          alert("Por favor, ingresa un correo electrónico válido.");
+        return;
+      }
+      const credentials = { email: cleanedEmail, password: password };
+      console.log("Login credentials:", credentials);
+      await login(credentials);
+      navigate('/');
+    
   };
 
   return (
@@ -113,7 +114,7 @@ const Login = () => {
         <p className="mt-6 text-center text-sm text-gray-600">
           ¿No tienes cuenta?{' '}
           <a
-            href="/register"
+            href="/signup"
             className="text-indigo-600 hover:underline font-medium"
           >
             Regístrate

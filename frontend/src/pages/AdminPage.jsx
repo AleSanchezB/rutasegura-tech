@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useUser } from '../contexts/AuthContext';
 import Sidebar from '../components/Sidebar';
 import { MenuIcon } from '@heroicons/react/outline';
+import rutas from '../data/rutas.jsx';
 
 const AdministradorUNE = () => {
   const { user } = useUser();
@@ -18,36 +19,9 @@ const AdministradorUNE = () => {
   const [error, setError] = useState('');
   const [queja, setQueja] = useState('');
   const [resultadosQueja, setResultadosQueja] = useState([]);
-
+  const [quejaEncontrada, setQuejaEncontrada] = useState('');
   // Simulación de datos
-  const rutasSimuladas = [
-    {
-      ruta: 'Ruta 1',
-      fecha: '2025-05-10',
-      paradas: [
-        { nombre: 'Parada 1', hora: '08:00 AM' },
-        { nombre: 'Parada 2', hora: '08:30 AM' },
-        { nombre: 'Parada 3', hora: '09:00 AM' },
-      ],
-        quejas: [
-        { parada: 'Parada 1', descripcion: 'El camión llegó tarde.' },
-        { parada: 'Parada 2', descripcion: 'El camión no se detuvo.' },
-      ],
-    },
-    {
-      ruta: 'Ruta 2',
-      fecha: '2025-05-10',
-      paradas: [
-        { nombre: 'Parada A', hora: '09:00 AM' },
-        { nombre: 'Parada B', hora: '09:30 AM' },
-        { nombre: 'Parada C', hora: '10:00 AM' },
-      ],
-       quejas: [
-        { parada: 'Parada A', descripcion: 'El servicio fue muy lento.' },
-      ],
-      
-    },
-  ];
+    const rutasSimuladas = rutas;
 
   // Funciones de acciones
   const handleBuscarRecorridos = () => {
@@ -105,11 +79,13 @@ const AdministradorUNE = () => {
   const handleBuscarQueja = () => {
     // Aquí, según los datos de quejas, simulamos la búsqueda de registros
     const registrosQueja = rutasSimuladas.filter(
-      (r) => r.ruta === ruta && r.paradas.some(p => p.nombre.includes(queja))
+      (r) =>  r.paradas.some(p => p.nombre.includes(queja))
     );
-
+      const quejaEncontrada = registrosQueja.flatMap(r => r.quejas.filter(q => q.parada.includes(queja)));
+      
     if (registrosQueja.length > 0) {
-      setResultadosQueja(registrosQueja);
+        setResultadosQueja(registrosQueja);
+        setQuejaEncontrada(quejaEncontrada);
       setError('');
     } else {
       setResultadosQueja([]);
@@ -137,7 +113,7 @@ const AdministradorUNE = () => {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
         <header className="bg-white shadow flex items-center justify-between px-6 py-4">
-          <h1 className="text-xl font-bold text-gray-800">Panel del Administrador de UNE</h1>
+          <h1 className="text-xl font-bold text-gray-800">Panel del Administrador de Rutas</h1>
           <div className="flex items-center space-x-3">
             <span className="text-gray-700 font-medium">
               {user?.first_name} {user?.last_name}
@@ -151,7 +127,8 @@ const AdministradorUNE = () => {
         </header>
 
         {/* Contenido principal */}
-        <main className="flex-1 p-10 overflow-y-auto">
+          <main className="flex-1 p-10 overflow-y-auto">
+              <h2 className="text-3xl font-bold text-gray-800 mb-4">Bienvenido, {user?.first_name}</h2>
           <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
               Administrar Rutas y Dispositivos GPS
@@ -266,7 +243,7 @@ const AdministradorUNE = () => {
                 <ul className="list-disc pl-6 space-y-1 text-gray-800">
                   {resultadosQueja.map((r, i) => (
                     <li key={i}>
-                      <span className="font-medium">{r.ruta}:</span> {r.paradas.map((p) => p.nombre).join(', ')}
+                      <span className="font-medium">{r.ruta}:</span> {quejaEncontrada[i].descripcion}
                     </li>
                   ))}
                 </ul>
