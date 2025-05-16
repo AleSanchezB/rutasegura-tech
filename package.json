@@ -1,0 +1,25 @@
+{
+  "name": "rutasegura-tech",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "dev": "concurrently \"cd backend && source env/bin/activate && cd app && uvicorn main:app --reload\" \"cd frontend && npm run dev\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AleSanchezB/rutasegura-tech.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AleSanchezB/rutasegura-tech/issues"
+  },
+  "homepage": "https://github.com/AleSanchezB/rutasegura-tech#readme",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

@@ -1,0 +1,51 @@
+import React from 'react';
+import { useUser } from '../contexts/AuthContext'; // Asumimos que ya tienes un contexto para manejar la autenticación
+
+const UserManual = () => {
+  const { user } = useUser(); // Obtenemos los datos del usuario desde el contexto
+
+  const renderAdminManual = () => (
+    <div>
+      <h2>Manual del Administrador</h2>
+      <ul>
+        <li>Configurar rutas y horarios.</li>
+        <li>Asignar dispositivos GPS.</li>
+        <li>Consultar recorridos históricos.</li>
+        <li>Ver registros de paradas.</li>
+        <li>Atender quejas.</li>
+      </ul>
+    </div>
+  );
+
+  const renderClientManual = () => (
+    <div>
+      <h2>Manual de Usuario - Empresa Cliente</h2>
+      <ul>
+        <li>Consultar rutas en tiempo real.</li>
+        <li>Verificar paso por paradas.</li>
+        <li>Consultar registros para evaluar quejas.</li>
+      </ul>
+    </div>
+  );
+
+  const renderWorkerManual = () => (
+    <div>
+      <h2>Manual de Usuario - Trabajador Cliente</h2>
+      <ul>
+        <li>Consultar registros de transporte.</li>
+        <li>Descargar información en formato PDF o CSV.</li>
+      </ul>
+    </div>
+  );
+
+  if (user?.is_admin) {
+    return renderAdminManual();
+  } else if (user?.is_admin === false) {
+    // Lógica para diferenciar entre Empresa Cliente y Trabajador Cliente (por ejemplo, según un ID)
+    return renderClientManual(); // O puedes retornar renderWorkerManual si es trabajador
+  }
+
+  return <div>Cargando información...</div>;
+};
+
+export default UserManual;

@@ -33,6 +33,12 @@ def authenticate_google_user(id_token_str: str, db: Session) -> LoginResponse:
             settings.GOOGLE_CLIENT_ID
         )
         email = id_info["email"]
+        if not email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="El token no contiene un email válido"
+            )
+        
         name = id_info.get("name", "Google User")
 
         first_name = name.split()[0] if name else None
@@ -45,6 +51,7 @@ def authenticate_google_user(id_token_str: str, db: Session) -> LoginResponse:
         )
 
     user = get_or_create_user(db, email, first_name, last_name)
+    print("User from Google:", user)
     access_token = create_access_token({"sub": str(user.id)})
 
     return LoginResponse(
@@ -109,3 +116,13 @@ def autorize_user(user: User, role: str):
             detail="User does not have enough privileges",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
+def get_user(user_id: int, db: Session) -> User:
+    print(f"Attempting to fetch user with ID: {user_id}")
+    user = db.query(User).filter(User.id == user_id).first()
+    if user:
+        print(f"User found: {user}")
+    else:
+        print(f"No user found with ID: {user_id}")
+    return user
+
