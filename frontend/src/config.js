@@ -15,5 +15,6 @@ export const ROUTES = {
 
     ADMIN: {
         USER_LIST: '/users',
+        MAP: '/map',
     }
 }

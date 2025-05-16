@@ -9,7 +9,7 @@ function AdminRoutes() {
   return (
     <Routes>
       <Route element={<ProtectedRoute />}>
-        <Route path="/admin" element={<Admin />} />
+          <Route path={ROUTES.ADMIN.MAP} element={<Admin />} />
       </Route>
     </Routes>
   );
