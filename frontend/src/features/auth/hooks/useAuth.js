@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { setToken, removeToken, isAuthenticated } from '../../../utils/auth';
 import { useUser } from '../../../contexts/AuthContext';
-import { loginRequest } from '../../../services/authService';
+import { loginRequest, loginRequestTrad } from '../../../services/authService';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../../config';
 
@@ -18,7 +18,6 @@ export default function useAuth() {
     // Caso: login con Google ya autenticado
     if (credentials.token && credentials.user) {
         try {
-            print("Google login credentials:", credentials);
         setToken(credentials.token);
         setAuthenticated(true);
         navigate(ROUTES.HOME);
@@ -30,10 +29,12 @@ export default function useAuth() {
       }
     }
 
+      console.log("No Google credentials, trying traditional login");
     // Caso: login con email/password tradicional
-    try {
-      const response = await loginRequest(credentials);
-      setToken(response.data.token);
+      try {
+        const response = await loginRequestTrad(credentials);
+        console.log("Login response:", response);
+      setToken(response.data.access_token);
       setAuthenticated(true);
       navigate(ROUTES.HOME);
       return true;

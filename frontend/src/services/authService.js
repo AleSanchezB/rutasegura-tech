@@ -2,6 +2,9 @@ import api from '../api';
 import { API_ENDPOINTS } from '../config/apiEndpoints';
 
 export const loginRequest = (credentials) =>
+    api.post(API_ENDPOINTS.AUTH.LOGIN, credentials);
+
+export const loginRequestTrad = (credentials) =>
   api.post(API_ENDPOINTS.AUTH.LOGIN, credentials);
 
 export const verifyTokenRequest = (token) =>

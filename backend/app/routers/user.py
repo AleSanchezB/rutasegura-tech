@@ -14,6 +14,7 @@ user_router = APIRouter(prefix="/users", tags=["Usuarios"])
 
 @user_router.post("/", status_code=status.HTTP_201_CREATED)
 def create_user_router(user_input: UserInput, db: Session = Depends(get_db)):
+    print("User Input:", user_input)
     user = create_user(user_input, db)
     if not user:
         raise HTTPException(

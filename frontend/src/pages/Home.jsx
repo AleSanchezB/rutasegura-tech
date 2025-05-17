@@ -14,20 +14,27 @@ const Home = () => {
     return <div>Loading...</div>;
   }
 
-  return (
-    <>
-      {user?.is_admin ? (
-        <div className="flex min-h-screen flex-1 flex-col justify-center lg:px-8">
-          <Sidebar />
-            <AdminUNEManual />
-        </div>
-      ) : (
-        <div className="flex min-h-screen flex-1 flex-col justify-center lg:px-8">
-            <AdminUNEManual />
-        </div>
-      )}
-    </>
-  );
+    return (
+        <>
+            {user?.is_admin ? (
+                <div className="flex min-h-screen flex-1 flex-col justify-center lg:px-8">
+                    <Sidebar />
+                    <AdminUNEManual />
+                </div>
+            ) : user?.is_employee ? (
+                <div className="flex min-h-screen flex-1 flex-col justify-center lg:px-8">
+                    <Sidebar />
+                    <TrabajadorCliente />
+                </div>
+            ) : (
+                <div className="flex min-h-screen flex-1 flex-col justify-center lg:px-8">
+                    <Sidebar />
+                    <AdminCliente />
+                </div>
+            )}
+        </>
+    );
+
 };
 
 export default Home;

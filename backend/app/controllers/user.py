@@ -15,19 +15,19 @@ def create_user(user_input: UserInput, db: Session) -> dict:
     # Pydantic --> ORM
     hashed_password = hash_password(user_input.password)
     new_user = User(
-        academic_id=user_input.academic_id,
         first_name=user_input.first_name,
         last_name=user_input.last_name,
         second_last_name=user_input.second_last_name,
         email=user_input.email,
         password=hashed_password,
-        profile_photo=user_input.profile_photo,
         is_admin=user_input.is_admin,
-        is_super_admin=user_input.is_super_admin,
+        is_employee=user_input.is_employee,
     )
     user_repo = UserRepo(db)
     created_user = user_repo.create(new_user)
+    print("Created User:", created_user)
     user_response = orm_to_dict(created_user, exclude=["password"])
+    print("User Response:", user_response)
     return user_response
 
 def get_user(user_id: int, db: Session) -> dict:

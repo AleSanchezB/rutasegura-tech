@@ -1,8 +1,10 @@
 import React from 'react';
 import clsx from 'clsx';
 import { XIcon } from '@heroicons/react/outline';
+import useAuth from '../features/auth/hooks/useAuth';
 
 const Sidebar = ({ isOpen, onClose }) => {
+    const { logout, authenticated } = useAuth();
   return (
     <>
       {/* Fondo oscuro para móvil */}
@@ -39,7 +41,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           <a href="/" className="hover:text-indigo-600">Inicio</a>
           <a href="/routes" className="hover:text-indigo-600">Rutas</a>
           <a href="/profile" className="hover:text-indigo-600">Perfil</a>
-          <a href="/logout" className="hover:text-indigo-600">Log Out</a>
+            <a onClick={logout} className="hover:text-indigo-600">Log Out</a>
         </nav>
       </aside>
     </>

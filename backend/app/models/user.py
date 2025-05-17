@@ -15,6 +15,7 @@ class User(BaseModel):
     phone_number: Mapped[Optional[str]] = mapped_column(String(15), nullable=True)
     password: Mapped[str] = mapped_column(String, nullable=True)
     is_admin: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    is_employee: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
     def __repr__(self):
         return f"<User(name={self.first_name}, email={self.email}, is_admin={self.is_admin})>"

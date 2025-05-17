@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useUser } from '../contexts/AuthContext';
 import Sidebar from '../components/Sidebar';
 import { MenuIcon } from '@heroicons/react/outline';
+import rutas from '../data/rutas.jsx';
 
 const TrabajadorCliente = () => {
   const { user } = useUser();
@@ -12,35 +13,7 @@ const TrabajadorCliente = () => {
   const [error, setError] = useState('');
 
   const handleBuscar = () => {
-    const rutasSimuladas = [
-      {
-        ruta: 'Ruta 1',
-        fecha: '2025-05-10',
-        paradas: [
-          { nombre: 'Parada 1', hora: '08:00 AM' },
-          { nombre: 'Parada 2', hora: '08:30 AM' },
-          { nombre: 'Parada 3', hora: '09:00 AM' },
-        ],
-      },
-        {
-            ruta: 'Ruta 2',
-            fecha: '2025-05-10',
-            paradas: [
-            { nombre: 'Parada A', hora: '09:00 AM' },
-            { nombre: 'Parada B', hora: '09:30 AM' },
-            { nombre: 'Parada C', hora: '10:00 AM' },
-            ],
-        },
-        {
-            ruta: 'Ruta 3',
-            fecha: '2025-05-10',
-            paradas: [
-            { nombre: 'Parada X', hora: '10:00 AM' },
-            { nombre: 'Parada Y', hora: '10:30 AM' },
-            { nombre: 'Parada Z', hora: '11:00 AM' },
-            ],
-        },
-    ];
+    const rutasSimuladas = rutas;
 
     const resultados = rutasSimuladas.filter(
       (r) => r.ruta === ruta && r.fecha === fecha
@@ -110,7 +83,9 @@ const TrabajadorCliente = () => {
         </header>
 
         {/* Contenido principal */}
-        <main className="flex-1 p-10 overflow-y-auto">
+          <main className="flex-1 p-10 overflow-y-auto">
+              <h2 className="text-3xl font-bold text-gray-800 mb-4">Bienvenido, {user?.first_name}</h2>
+
           <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
               Consultar Registros de Transporte
